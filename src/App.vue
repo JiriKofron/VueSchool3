@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import HomePage from "@/components/HomePage.vue";
+import HomePage from "@/views/HomePage.vue";
 </script>
 
 <template>
-  <HomePage />
+  <div class="container-xxl">
+    <HomePage />
+  </div>
 </template>
 
 <style>
