@@ -21,16 +21,17 @@
       type="text"
       v-model="country"
       placeholder="Search for a country..."
+      @change="countriesStore.findCountry(country)"
     />
   </div>
-  <div>
+  <div class="mx-auto mt-4 pa-2 select-container">
     <select
-      class="form-select"
+      class="form-select w-50"
       v-model="region"
       aria-label="Country region select"
       @change="filterRegion($event)"
     >
-      <option selected disabled>Filter by region</option>
+      <option value="default" disabled>Filter by Region</option>
       <option v-for="region in regions" :key="region.id" :value="region">
         {{ region }}
       </option>
@@ -47,36 +48,20 @@ import axios from "axios";
 
 const countriesStore = useCoutriesStore();
 const country = ref("");
-const region = ref("");
-let filteredCountries = ref([]);
+const region = ref("default");
 
 onMounted(() => countriesStore.fetchCountries());
 let allCountries = computed(() => countriesStore.getAllCountries);
-
-const countries = allCountries.value.reduce((acc, country) => {
-  let i = acc.findIndex((el) => {
-    return el.region === country.region;
-  });
-  console.log(i);
-  if (i !== -1) {
-    acc.splice(i, 1);
-  }
-  acc.push(country);
-  console.log(country);
-  return acc;
-}, []);
-
-const regions = countries.map((country) => country.region);
+const regions = computed(() => countriesStore.getRegions);
 
 const filterRegion = (event) => {
-  axios
-    .get(
-      `https://restcountries.com/v3.1/region/${event.target.value.toLowerCase()}`
-    )
-    .then((response) => {
-      console.log(response.data);
-      allCountries = response.data;
-    });
+  let regionValue = event.target.value.toLowerCase();
+
+  if ("default" === regionValue) {
+    return;
+  }
+
+  countriesStore.filterRegions(regionValue);
 };
 </script>
 
@@ -130,6 +115,18 @@ button {
       font-family: "Nunito Sans", sans-serif;
       font-size: 0.85rem;
     }
+  }
+}
+
+.select-container {
+  width: 90%;
+
+  select {
+    background-color: $dark-blue;
+    color: $white;
+    border: none;
+    font-family: "Nunito Sans", sans-serif;
+    font-size: 0.7rem;
   }
 }
 </style>
