@@ -3,17 +3,24 @@ import HomePage from "@/views/HomePage.vue";
 </script>
 
 <template>
-  <div class="container-xxl">
+  <div>
     <HomePage />
   </div>
 </template>
 
-<style>
+<style lang="scss">
+@import "@/styles/variable.scss";
+
 #app {
   max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
   font-weight: normal;
+}
+
+body {
+  background-color: $very-dark-blue-bg !important;
 }
 </style>
