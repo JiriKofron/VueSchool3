@@ -3,6 +3,7 @@ import axios from "axios";
 
 export type RootState = {
   countries: any[];
+  filteredCountries: any[];
   regions: string[];
 };
 
@@ -12,9 +13,11 @@ export const useCoutriesStore = defineStore({
     ({
       countries: [],
       regions: [],
+      filteredCountries: [],
     } as RootState),
   getters: {
     getAllCountries: (state) => state.countries,
+    getFilteredCountries: (state) => state.filteredCountries,
     getRegions: (state) => state.regions,
   },
   actions: {
@@ -45,7 +48,7 @@ export const useCoutriesStore = defineStore({
         .get(`https://restcountries.com/v3.1/region/${region}`)
         .then((response) => {
           console.log(response.data);
-          return (this.countries = response.data);
+          return (this.filteredCountries = response.data);
         });
     },
     findCountry(query: string) {
@@ -58,7 +61,7 @@ export const useCoutriesStore = defineStore({
           country?.name?.official?.includes(query) ||
           country?.name?.common.includes(query)
       );
-      return (this.countries = new Array<any>(foundCountry));
+      return (this.filteredCountries = new Array<any>(foundCountry));
     },
   },
 });

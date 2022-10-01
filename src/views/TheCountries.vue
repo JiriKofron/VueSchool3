@@ -7,30 +7,39 @@
         class="d-flex align-items-center justify-content-center my-5"
       >
         <div class="card w-75">
-          <img
-            :src="country?.flags?.svg"
-            class="card-img-top"
-            :alt="country.name"
-          />
-          <div class="card-body">
-            <h5 class="card-title">{{ country.name?.official }}</h5>
-            <div class="card-text">
-              <ul>
-                <li>
-                  <span class="card-body__label">Population:</span>
-                  {{ country?.population }}
-                </li>
-                <li>
-                  <span class="card-body__label">Region:</span>
-                  {{ country?.region }}
-                </li>
-                <li>
-                  <span class="card-body__label">Capital:</span>
-                  {{ countryCapital(country) }}
-                </li>
-              </ul>
+          <router-link
+            :to="{
+              name: 'country',
+              params: {
+                country: country?.name?.common,
+              },
+            }"
+          >
+            <img
+              :src="country?.flags?.svg"
+              class="card-img-top"
+              :alt="country.name"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{ country.name?.official }}</h5>
+              <div class="card-text">
+                <ul>
+                  <li>
+                    <span class="card-body__label">Population:</span>
+                    {{ country?.population }}
+                  </li>
+                  <li>
+                    <span class="card-body__label">Region:</span>
+                    {{ country?.region }}
+                  </li>
+                  <li>
+                    <span class="card-body__label">Capital:</span>
+                    {{ countryCapital(country) }}
+                  </li>
+                </ul>
+              </div>
             </div>
-          </div>
+          </router-link>
         </div>
       </article>
     </section>
@@ -44,8 +53,6 @@ const props = defineProps({
     required: true,
   },
 });
-
-console.log(props.countries);
 
 const countryCapital = (country) => country?.capital?.toString();
 </script>
@@ -81,5 +88,9 @@ const countryCapital = (country) => country?.capital?.toString();
 
 li {
   list-style: none;
+}
+
+a {
+  text-decoration: none;
 }
 </style>

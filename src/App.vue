@@ -1,10 +1,13 @@
-<script setup lang="ts"></script>
-
 <template>
   <div>
+    <TheNavbar />
     <router-view />
   </div>
 </template>
+
+<script setup>
+import TheNavbar from "./components/TheNavbar.vue";
+</script>
 
 <style lang="scss">
 @import "@/styles/variable.scss";

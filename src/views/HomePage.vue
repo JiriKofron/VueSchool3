@@ -1,14 +1,4 @@
 <template>
-  <nav class="nav nav-pills align-items-center justify-content-between px-3">
-    <h1>Where in the world?</h1>
-    <button
-      type="button"
-      class="btn btn-outline-light btn-sm"
-      aria-current="page"
-    >
-      Mode
-    </button>
-  </nav>
   <div class="mx-auto mt-4 pa-2 search-container">
     <img
       src="src/assets/icons8-search-30.png"
@@ -37,14 +27,16 @@
       </option>
     </select>
   </div>
-  <TheCountries :countries="allCountries" />
+  <TheCountries
+    :countries="filteredCountries.length > 0 ? filteredCountries : allCountries"
+  />
 </template>
 
 <script setup>
 import TheCountries from "./TheCountries.vue";
+
 import { computed, onMounted, ref } from "vue";
 import { useCoutriesStore } from "@/stores/countries";
-import axios from "axios";
 
 const countriesStore = useCoutriesStore();
 const country = ref("");
@@ -52,6 +44,7 @@ const region = ref("default");
 
 onMounted(() => countriesStore.fetchCountries());
 let allCountries = computed(() => countriesStore.getAllCountries);
+let filteredCountries = computed(() => countriesStore.getFilteredCountries);
 const regions = computed(() => countriesStore.getRegions);
 
 const filterRegion = (event) => {
@@ -67,22 +60,6 @@ const filterRegion = (event) => {
 
 <style lang="scss" scoped>
 @import "@/styles/variable.scss";
-nav {
-  width: 100%;
-  min-height: 5rem;
-  background-color: $dark-blue;
-}
-
-h1 {
-  font-family: "Nunito Sans", sans-serif;
-  font-size: clamp(0.8rem, 4vw, 4rem);
-  font-weight: 600;
-  color: $white;
-}
-
-button {
-  font-family: "Nunito Sans", sans-serif;
-}
 
 .search-container {
   width: 90%;
@@ -92,6 +69,7 @@ button {
   justify-content: center;
   border-radius: 0.3rem;
   background-color: $dark-blue;
+  box-shadow: 0 0 10px 1px $very-dark-blue-text;
 
   &:focus-within {
     border: 1px solid $white;
@@ -123,6 +101,7 @@ button {
 
   select {
     background-color: $dark-blue;
+    box-shadow: 0 0 10px 1px $very-dark-blue-text;
     color: $white;
     border: none;
     font-family: "Nunito Sans", sans-serif;
