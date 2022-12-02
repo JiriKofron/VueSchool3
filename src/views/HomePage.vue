@@ -1,7 +1,7 @@
 <template>
   <div class="mt-4 pa-2 search-container">
     <img
-      src="./src/assets/icons8-search-30.png"
+      src="/src/assets/icons8-search-30.png"
       class="search-container__icon"
       width="20"
       height="20"
