@@ -5,9 +5,10 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "allowJs": true,
+    "outDir": "./built"
   },
-
   "references": [
     {
       "path": "./tsconfig.vite-config.json"
