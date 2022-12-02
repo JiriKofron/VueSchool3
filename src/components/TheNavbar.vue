@@ -24,7 +24,7 @@ nav {
 
 h1 {
   font-family: "Nunito Sans", sans-serif;
-  font-size: clamp(0.8rem, 4vw, 4rem);
+  font-size: clamp(0.8rem, 4vw, 2rem);
   font-weight: 600;
   color: $white;
 }

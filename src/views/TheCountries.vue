@@ -1,17 +1,17 @@
 <template>
   <main>
-    <section>
+    <section class="d-flex flex-wrap justify-content-center">
       <article
         v-for="country in props.countries"
         :key="country.id"
-        class="d-flex align-items-center justify-content-center my-5"
+        class="d-flex align-items-stretch justify-content-center my-5"
       >
         <div class="card w-75">
           <router-link
             :to="{
               name: 'country',
               params: {
-                country: country?.name?.common,
+                country: country?.name?.official,
               },
             }"
           >
@@ -63,6 +63,8 @@ const countryCapital = (country) => country?.capital?.toString();
 .card {
   border: none;
   font-family: "Nunito Sans", sans-serif;
+  max-width: 18rem;
+  background: $dark-blue;
 }
 
 .card-title {

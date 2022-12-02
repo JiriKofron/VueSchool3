@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto mt-4 pa-2 search-container">
+  <div class="mt-4 pa-2 search-container">
     <img
       src="src/assets/icons8-search-30.png"
       class="search-container__icon"
@@ -14,20 +14,33 @@
       @change="countriesStore.findCountry(country)"
     />
   </div>
-  <div class="mx-auto mt-4 pa-2 select-container">
+  <div class="mt-4 pa-2 select__container">
     <select
-      class="form-select w-50"
+      class="form-select select__controller"
       v-model="region"
       aria-label="Country region select"
       @change="filterRegion($event)"
     >
-      <option value="default" disabled>Filter by Region</option>
-      <option v-for="region in regions" :key="region.id" :value="region">
+      <option value="default" class="select__option" disabled>
+        Filter by Region
+      </option>
+      <option
+        v-for="region in regions"
+        :key="region.id"
+        :value="region"
+        class="select__option"
+      >
         {{ region }}
       </option>
     </select>
   </div>
+  <div v-if="!isLoaded" class="loading-page">
+    <div class="spinner-border text-danger" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
   <TheCountries
+    v-else
     :countries="filteredCountries.length > 0 ? filteredCountries : allCountries"
   />
 </template>
@@ -42,9 +55,14 @@ const countriesStore = useCoutriesStore();
 const country = ref("");
 const region = ref("default");
 
-onMounted(() => countriesStore.fetchCountries());
+onMounted(() => {
+  countriesStore.resetFilter();
+  countriesStore.fetchCountries();
+});
 let allCountries = computed(() => countriesStore.getAllCountries);
 let filteredCountries = computed(() => countriesStore.getFilteredCountries);
+let isLoaded = computed(() => countriesStore.isLoaded);
+
 const regions = computed(() => countriesStore.getRegions);
 
 const filterRegion = (event) => {
@@ -63,6 +81,7 @@ const filterRegion = (event) => {
 
 .search-container {
   width: 90%;
+  margin: 0 auto;
   height: 2.5rem;
   display: flex;
   align-items: center;
@@ -70,6 +89,12 @@ const filterRegion = (event) => {
   border-radius: 0.3rem;
   background-color: $dark-blue;
   box-shadow: 0 0 10px 1px $very-dark-blue-text;
+
+  @media (min-width: 50rem) {
+    width: 25rem;
+    justify-self: flex-start;
+    margin-left: 0;
+  }
 
   &:focus-within {
     border: 1px solid $white;
@@ -96,8 +121,16 @@ const filterRegion = (event) => {
   }
 }
 
-.select-container {
+.select__container {
   width: 90%;
+  margin: 0 auto;
+
+  @media (min-width: 50rem) {
+    position: absolute;
+    width: 40%;
+    left: 74%;
+    top: 5rem;
+  }
 
   select {
     background-color: $dark-blue;
@@ -106,6 +139,22 @@ const filterRegion = (event) => {
     border: none;
     font-family: "Nunito Sans", sans-serif;
     font-size: 0.7rem;
+    max-width: 45%;
+
+    @media (min-width: 50rem) {
+      height: 2.5rem;
+      width: 11rem;
+    }
   }
+}
+
+.loading-page {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  margin-top: 4rem;
+  align-items: flex-start;
+  justify-content: center;
 }
 </style>

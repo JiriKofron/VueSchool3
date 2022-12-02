@@ -32,27 +32,27 @@
         <ul>
           <li>
             <span class="info-card__label">Top level domain:</span>
-            {{ country?.tld }}
+            {{ country?.tld?.toString() }}
           </li>
           <li>
             <span class="info-card__label">Currencies:</span>
-            {{ country?.currencies }}
+            {{ getCurrencies(country?.currencies) }}
           </li>
           <li>
             <span class="info-card__label">Languages:</span>
-            {{ country?.languages }}
+            {{ getLanguages(country?.languages) }}
           </li>
         </ul>
       </div>
-      <div>
+      <div v-if="hasBorderCountries">
         <h6>Border countries</h6>
         <button
           class="container__btn--switch"
           v-for="borderCountry in borderCountries"
-          :key="borderCountry.area"
+          :key="borderCountry?.area"
           @click="switchToCountry(borderCountry)"
         >
-          {{ borderCountry?.name.common }}
+          {{ borderCountry?.name?.common }}
         </button>
       </div>
     </div>
@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, onBeforeMount, ref } from "vue";
 import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 import { useCoutriesStore } from "@/stores/countries";
@@ -69,46 +69,73 @@ const route = useRoute();
 const router = useRouter();
 const countriesStore = useCoutriesStore();
 
-onMounted(() => fetchCountryDetails());
 let country = ref({});
 let borderCountries = ref([]);
+let hasBorderCountries = ref(false);
+
+onBeforeMount(() => countriesStore.fetchCountries());
+onMounted(() => fetchCountryDetails());
 
 const fetchCountryDetails = (switchCountry = undefined) => {
-  console.log(route.params.country);
   axios
     .get(
       `https://restcountries.com/v3.1/name/${
-        switchCountry || route.params.country
+        switchCountry || route?.params?.country
       }`
     )
     .then((response) => {
-      Object.assign(country.value, ...response.data);
+      Object.assign(country?.value, ...response.data);
       processBorderCountries(country?.value?.borders);
     });
 };
 
-const countryCapital = () => country.value.capital?.toString();
+const countryCapital = () => country?.value?.capital?.toString();
 
 let allCountries = computed(() => countriesStore.getAllCountries);
 const processBorderCountries = (borderCountriesCodes) => {
-  if (0 === borderCountriesCodes.length) {
+  if (null == borderCountriesCodes?.length) {
     return;
   }
 
+  hasBorderCountries.value = true;
+
   for (let countryCode of borderCountriesCodes) {
     let borderCountry = allCountries.value.find(
-      (country) => country.cca3 === countryCode
+      (country) => country?.fifa === countryCode
     );
-    borderCountries.value.push(borderCountry);
+
+    if ("undefined" != typeof borderCountry) {
+      borderCountries.value.push(borderCountry);
+    }
   }
 };
 
 const switchToCountry = (borderCountry) => {
+  borderCountries.value = [];
   router.push({
     name: "country",
     params: { country: borderCountry?.name?.common },
   });
   fetchCountryDetails(borderCountry.name?.common);
+};
+
+const getCurrencies = (currencies) => {
+  if (!currencies) {
+    return;
+  }
+
+  let allCurrencies = Object.values(currencies);
+  for (let [key, value] of Object.entries(allCurrencies)) {
+    return value.name;
+  }
+};
+
+const getLanguages = (languages) => {
+  if (!languages) {
+    return;
+  }
+  let allLanguages = Object.values(languages);
+  return allLanguages.toString();
 };
 </script>
 
@@ -133,6 +160,7 @@ const switchToCountry = (borderCountry) => {
 
   &__btn--switch {
     margin: 0.3rem;
+    width: 5.5rem;
   }
 
   img {
