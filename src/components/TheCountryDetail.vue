@@ -5,55 +5,57 @@
         <span>&#8592;</span> Back
       </button>
     </router-link>
-    <img :src="country?.flags?.svg" :alt="country?.name?.official" />
-    <div class="mt-5 info-card">
-      <h5>{{ country?.name?.official }}</h5>
-      <div>
-        <ul>
-          <li>
-            <span class="info-card__label">Population:</span>
-            {{ country?.population }}
-          </li>
-          <li>
-            <span class="info-card__label">Region:</span>
-            {{ country?.region }}
-          </li>
-          <li>
-            <span class="info-card__label">Subregion:</span>
-            {{ country?.subregion }}
-          </li>
-          <li>
-            <span class="info-card__label">Capital:</span>
-            {{ countryCapital() }}
-          </li>
-        </ul>
-      </div>
-      <div>
-        <ul>
-          <li>
-            <span class="info-card__label">Top level domain:</span>
-            {{ country?.tld?.toString() }}
-          </li>
-          <li>
-            <span class="info-card__label">Currencies:</span>
-            {{ getCurrencies(country?.currencies) }}
-          </li>
-          <li>
-            <span class="info-card__label">Languages:</span>
-            {{ getLanguages(country?.languages) }}
-          </li>
-        </ul>
-      </div>
-      <div v-if="hasBorderCountries">
-        <h6>Border countries</h6>
-        <button
-          class="container__btn--switch"
-          v-for="borderCountry in borderCountries"
-          :key="borderCountry?.area"
-          @click="switchToCountry(borderCountry)"
-        >
-          {{ borderCountry?.name?.common }}
-        </button>
+    <div class="info-card__large">
+      <img :src="country?.flags?.svg" :alt="country?.name?.official" />
+      <div class="mt-5 info-card">
+        <h5>{{ country?.name?.official }}</h5>
+        <div>
+          <ul>
+            <li>
+              <span class="info-card__label">Population:</span>
+              {{ country?.population }}
+            </li>
+            <li>
+              <span class="info-card__label">Region:</span>
+              {{ country?.region }}
+            </li>
+            <li>
+              <span class="info-card__label">Subregion:</span>
+              {{ country?.subregion }}
+            </li>
+            <li>
+              <span class="info-card__label">Capital:</span>
+              {{ countryCapital() }}
+            </li>
+          </ul>
+        </div>
+        <div>
+          <ul>
+            <li>
+              <span class="info-card__label">Top level domain:</span>
+              {{ country?.tld?.toString() }}
+            </li>
+            <li>
+              <span class="info-card__label">Currencies:</span>
+              {{ getCurrencies(country?.currencies) }}
+            </li>
+            <li>
+              <span class="info-card__label">Languages:</span>
+              {{ getLanguages(country?.languages) }}
+            </li>
+          </ul>
+        </div>
+        <div v-if="hasBorderCountries">
+          <h6>Border countries</h6>
+          <button
+            class="container__btn--switch"
+            v-for="borderCountry in borderCountries"
+            :key="borderCountry?.area"
+            @click="switchToCountry(borderCountry)"
+          >
+            {{ borderCountry?.name?.common }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -166,6 +168,20 @@ const getLanguages = (languages) => {
   img {
     width: 100%;
     margin: 3rem auto 0 auto;
+
+    @media (min-width: 40rem) {
+      width: 40%;
+      padding-bottom: 100%;
+      margin: 3rem 0 0 0;
+    }
+  }
+}
+
+.info-card__large {
+  @media (min-width: 40rem) {
+    display: flex !important;
+    flex-direction: row;
+    justify-content: space-between;
   }
 }
 
@@ -173,6 +189,11 @@ const getLanguages = (languages) => {
   font-family: "Nunito Sans", sans-serif;
   font-size: 0.8rem;
   color: $white;
+
+  @media (min-width: 40rem) {
+    width: 100%;
+    margin-left: 6rem;
+  }
 
   h5 {
     font-weight: 800;
